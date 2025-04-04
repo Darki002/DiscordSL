@@ -1,5 +1,5 @@
 # ---- Stage 1: Builder ----
-FROM python:3.12-slim as builder
+FROM python:3.12 as builder
 
 WORKDIR /app
 
@@ -7,10 +7,7 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Create a virtual environment and install dependencies
-RUN python -m venv .venv && \
-    . .venv/bin/activate && \
-    pip install --upgrade pip && \
-    pip install -r requirements.txt
+RUN pip install -r requirements.txt
 
 # Copy the rest of your application code (including .venv will be part of /app)
 COPY . .
