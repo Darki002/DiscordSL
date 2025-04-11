@@ -24,7 +24,7 @@ async def on_command(ctx):
     logger.info(f"Command used: {ctx.command} by {ctx.author} in {ctx.guild}/{ctx.channel}")
 
 
-@bot.hybrid_command(name="ping", with_app_command=True, description="Antwortet mit Pong!")
+@bot.hybrid_command(name="ping", with_app_command=True, description="Ping Bot and response with Pong.")
 async def ping(ctx):
     await ctx.send("Pong!")
 
