@@ -6,8 +6,11 @@ WORKDIR /app
 # Copy only requirements to leverage Docker cache
 COPY requirements.txt .
 
-# Create a virtual environment and install dependencies
-RUN pip install -r requirements.txt
+# Create a virtual environment and install dependencies within it
+RUN python -m venv .venv && \
+    . .venv/bin/activate && \
+    pip install --upgrade pip && \
+    pip install -r requirements.txt
 
 # Copy the rest of your application code (including .venv will be part of /app)
 COPY . .
