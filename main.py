@@ -13,6 +13,11 @@ intents.message_content = True
 
 bot = commands.Bot(command_prefix="$", intents=intents)
 
+@bot.event
+async def on_command(ctx):
+    print(f"Command used: {ctx.command} by {ctx.author} in {ctx.guild}/{ctx.channel}")
+
+
 @bot.hybrid_command(name="ping", with_app_command=True, description="Antwortet mit Pong!")
 async def ping(ctx):
     await ctx.send("Pong!")
