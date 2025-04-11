@@ -1,5 +1,5 @@
 # ---- Stage 1: Builder ----
-FROM python:3.12 as builder
+FROM python:3.12 AS builder
 
 WORKDIR /app
 
