@@ -32,7 +32,11 @@ async def ping(ctx):
 
 @bot.hybrid_command(name="session start", with_app_command=True, description="Start a session.")
 async def start_session(ctx):
-    session_manager.start_session(ctx.author.id)
+    session_manager.start_session(ctx.author.id, )
+
+@bot.hybrid_command(name="session stop", with_app_command=True, description="Start the running session.")
+async def stop_session(ctx):
+    session_manager.stop_session(ctx.author.id)
 
 # Commands end
 
