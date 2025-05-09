@@ -23,10 +23,13 @@ bot = commands.Bot(command_prefix="$", intents=intents)
 async def on_command(ctx):
     logger.info(f"Command used: {ctx.command} by {ctx.author} in {ctx.guild}/{ctx.channel}")
 
+# Commands begin
 
 @bot.hybrid_command(name="ping", with_app_command=True, description="Ping Bot and response with Pong.")
 async def ping(ctx):
     await ctx.send("Pong!")
+
+# Commands end
 
 @bot.event
 async def on_ready():

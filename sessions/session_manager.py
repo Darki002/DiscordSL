@@ -14,8 +14,8 @@ def start_session(user_id: str, username: str):
     container.start()
 
     sessions[user_id] = Session(user_id, container)
-    return container.name
+    return container.short_id
 
 
-def get_session(user_id: str):
+def get_session(user_id: str) -> Session :
     return sessions[user_id]
