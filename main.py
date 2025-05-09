@@ -2,6 +2,7 @@ import os
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
+from sessions import session_manager
 import logging
 
 
@@ -28,6 +29,10 @@ async def on_command(ctx):
 @bot.hybrid_command(name="ping", with_app_command=True, description="Ping Bot and response with Pong.")
 async def ping(ctx):
     await ctx.send("Pong!")
+
+@bot.hybrid_command(name="session start", with_app_command=True, description="Start a session.")
+async def start_session(ctx):
+    session_manager.start_session(ctx.author.id)
 
 # Commands end
 
