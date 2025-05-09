@@ -33,7 +33,7 @@ async def ping(ctx):
 
 @bot.hybrid_command(name="session start", with_app_command=True, description="Start a session.")
 async def start_session(ctx):
-    result = session_manager.start_session(ctx.author.id, )
+    result = session_manager.start_session(ctx.author.id, ctx.author.name)
     if result is MaxSessionsError:
         await ctx.send("Max. number of sessions reached, too many users atm. Please try again later.")
         return
