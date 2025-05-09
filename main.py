@@ -30,7 +30,7 @@ async def ping(ctx):
 
 @bot.event
 async def on_ready():
-    await bot.tree.sync()  # Synchronisiert die Slash-Befehle mit Discord
+    await bot.tree.sync()
     logger.info(f"Bot is online as {bot.user}")
 
 bot.run(token)

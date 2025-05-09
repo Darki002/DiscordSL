@@ -1,0 +1,1 @@
+# TODO: class for Session that manages connection to podman
