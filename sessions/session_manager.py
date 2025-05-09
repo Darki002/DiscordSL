@@ -23,8 +23,8 @@ def start_session(user_id: str, username: str) -> str | SessionError:
     sessions[user_id] = Session(user_id, container, _remove_container)
     return container.short_id
 
-def stop_session(user_id: str, username: str):
-    get_session().stop()
+def stop_session(user_id: str):
+    get_session(user_id).stop()
 
 def get_session(user_id: str) -> Session :
     return sessions.get(user_id)
