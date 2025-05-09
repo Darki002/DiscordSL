@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from sessions import session_manager
 import logging
 
+from sessions.SessionError import SessionError, MaxSessionsError, UserHasSessionError
 
 load_dotenv()
 
@@ -32,7 +33,15 @@ async def ping(ctx):
 
 @bot.hybrid_command(name="session start", with_app_command=True, description="Start a session.")
 async def start_session(ctx):
-    session_manager.start_session(ctx.author.id, )
+    result = session_manager.start_session(ctx.author.id, )
+    if result is MaxSessionsError:
+        await ctx.send("Max. number of sessions reached, too many users atm. Please try again later.")
+        return
+    if result is UserHasSessionError:
+        await ctx.send("You already have a running session!")
+        return
+
+    ctx.send("Your session has started.")
 
 @bot.hybrid_command(name="session stop", with_app_command=True, description="Start the running session.")
 async def stop_session(ctx):
