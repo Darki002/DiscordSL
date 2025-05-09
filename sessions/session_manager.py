@@ -16,6 +16,8 @@ def start_session(user_id: str, username: str):
     sessions[user_id] = Session(user_id, container)
     return container.short_id
 
+def stop_session(user_id: str, username: str):
+    get_session().stop()
 
 def get_session(user_id: str) -> Session :
     return sessions[user_id]
