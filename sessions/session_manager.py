@@ -1,5 +1,4 @@
 from podman import PodmanClient
-from podman.domain.containers import Container
 
 from sessions.Session import Session
 from sessions.SessionError import MaxSessionsError, UserHasSessionError, SessionError
