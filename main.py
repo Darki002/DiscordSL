@@ -64,7 +64,13 @@ async def start_session(ctx):
 @bot.hybrid_command(name="session stop", with_app_command=True, description="Stop the running session.")
 async def stop_session(ctx):
     session_manager.stop_session(ctx.author.id)
-    ctx.send("Your session has stoped.")
+    await ctx.send("Your session has stoped.")
+
+
+@bot.hybrid_command(name="session status", with_app_command=True, description="Checks the status of the session.")
+async def session_status(ctx):
+    status = session_manager.get_container_status(ctx.author.id)
+    await ctx.send(f"Your session is {status}!")
 
 # Commands end
 
