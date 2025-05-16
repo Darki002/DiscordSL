@@ -4,8 +4,9 @@ from discord.ext import commands
 from dotenv import load_dotenv
 from sessions import session_manager
 import logging
+import asyncio
 
-from sessions.SessionError import SessionError, MaxSessionsError, UserHasSessionError
+from sessions.SessionError import MaxSessionsError, UserHasSessionError
 
 load_dotenv()
 
@@ -21,6 +22,22 @@ intents.message_content = True
 
 bot = commands.Bot(command_prefix="$", intents=intents)
 
+status_messages = {}
+
+async def monitor_container_status():
+    while True:
+        for user_id, (message, session) in list(status_messages.items()):
+            status = session.status()
+            if status == "running":
+                await message.edit(content="Your session is ready!")
+                del status_messages[user_id]
+            elif status in ["exited", "error"]:
+                await message.edit(content="Failed to start your session. Please try again later.")
+                del status_messages[user_id]
+            else:
+                await message.edit(content=f"Your session is {status}...")
+        await asyncio.sleep(5)
+
 @bot.event
 async def on_command(ctx):
     logger.info(f"Command used: {ctx.command} by {ctx.author} in {ctx.guild}/{ctx.channel}")
@@ -33,15 +50,16 @@ async def ping(ctx):
 
 @bot.hybrid_command(name="session start", with_app_command=True, description="Start a session.")
 async def start_session(ctx):
-    result = session_manager.start_session(ctx.author.id, ctx.author.name)
-    if result is MaxSessionsError:
+    session = session_manager.start_session(ctx.author.id, ctx.author.name)
+    if session is MaxSessionsError:
         await ctx.send("Max. number of sessions reached, too many users atm. Please try again later.")
         return
-    if result is UserHasSessionError:
+    if session is UserHasSessionError:
         await ctx.send("You already have a running session!")
         return
 
-    ctx.send("Your session has started.")
+    message = await ctx.send("Your session is starting...")
+    status_messages[session.user_id] = (message, session)
 
 @bot.hybrid_command(name="session stop", with_app_command=True, description="Stop the running session.")
 async def stop_session(ctx):
@@ -54,5 +72,7 @@ async def stop_session(ctx):
 async def on_ready():
     await bot.tree.sync()
     logger.info(f"Bot is online as {bot.user}")
+    bot.loop.create_task(monitor_container_status())
 
 bot.run(token)
+

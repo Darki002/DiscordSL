@@ -1,4 +1,5 @@
 from podman import PodmanClient
+from podman.domain.containers import Container
 
 from sessions.Session import Session
 from sessions.SessionError import MaxSessionsError, UserHasSessionError, SessionError
@@ -9,7 +10,7 @@ MAX_SESSIONS=5
 sessions={}
 
 
-def start_session(user_id: str, username: str) -> str | SessionError:
+def start_session(user_id: str, username: str) -> Session | SessionError:
     if len(sessions) >= MAX_SESSIONS:
         return MaxSessionsError()
 
@@ -21,7 +22,7 @@ def start_session(user_id: str, username: str) -> str | SessionError:
     container.start()
 
     sessions[user_id] = Session(user_id, container, _remove_container)
-    return container.short_id
+    return sessions[user_id]
 
 def stop_session(user_id: str):
     get_session(user_id).stop()
@@ -29,6 +30,11 @@ def stop_session(user_id: str):
 def get_session(user_id: str) -> Session :
     return sessions.get(user_id)
 
+def get_container_status(user_id: str) -> str:
+    session = get_session(user_id)
+    if session:
+        return session.status()
+    return "unknown"
 
 def _remove_container(user_id: str):
     sessions.pop(user_id)

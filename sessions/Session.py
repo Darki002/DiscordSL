@@ -19,3 +19,7 @@ class Session:
         self.container.stop()
         self.container.remove(v=True)
         self.on_stop(self.user_id)
+
+    def status(self):
+        self.container.reload()  # Refresh container state
+        return self.container.status
