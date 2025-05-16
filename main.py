@@ -43,10 +43,10 @@ async def start_session(ctx):
 
     ctx.send("Your session has started.")
 
-@bot.hybrid_command(name="session stop", with_app_command=True, description="Start the running session.")
+@bot.hybrid_command(name="session stop", with_app_command=True, description="Stop the running session.")
 async def stop_session(ctx):
     session_manager.stop_session(ctx.author.id)
-    ctx.send("Your session has started.")
+    ctx.send("Your session has stoped.")
 
 # Commands end
 
