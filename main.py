@@ -39,6 +39,15 @@ async def monitor_container_status():
                 await message.edit(content=f"Your session is {status}...")
         await asyncio.sleep(5)
 
+
+def trim_output(text: str, limit: int = 1900) -> str:
+    """Trim output to avoid hitting Discord's 2000 character limit."""
+    if len(text) > limit:
+        return text[:limit] + "\n... (truncated)"
+    return text
+
+
+
 @bot.event
 async def on_command(ctx):
     logger.info(f"Command used: {ctx.command} by {ctx.author} in {ctx.guild}/{ctx.channel}")
@@ -87,9 +96,11 @@ async def exec_bash(ctx: commands.Context, command: str):
 
     response = ""
     if stdout:
-        response += f"**STDOUT:**\n```bash\n{stdout}\n```"
+        stdout_trim = trim_output(stdout)
+        response += f"**STDOUT:**\n```bash\n{stdout_trim}\n```"
     if stderr:
-        response += f"**STDERR:**\n```bash\n{stderr}\n```"
+        stderr_trim = trim_output(stderr)
+        response += f"**STDERR:**\n```bash\n{stderr_trim}\n```"
     if not response:
         response = "No output was returned."
 
