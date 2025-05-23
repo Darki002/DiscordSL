@@ -11,7 +11,7 @@ from sessions.SessionError import MaxSessionsError, UserHasSessionError, Session
 
 load_dotenv()
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname) - %(message)s")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("discord_bot")
 
 token = os.getenv("DISCORD_TOKEN")
@@ -59,7 +59,7 @@ async def ping(ctx: commands.Context):
     await ctx.send("Pong!")
 
 
-@bot.hybrid_command(name="session start", with_app_command=True, description="Start a session.")
+@bot.hybrid_command(name="start", with_app_command=True, description="Start a session.")
 async def start_session(ctx: commands.Context):
     session = session_manager.start_session(ctx.author.id, ctx.author.name)
     if session is MaxSessionsError:
@@ -75,13 +75,13 @@ async def start_session(ctx: commands.Context):
     status_messages[session.user_id] = (message, session)
 
 
-@bot.hybrid_command(name="session stop", with_app_command=True, description="Stop the running session.")
+@bot.hybrid_command(name="stop", with_app_command=True, description="Stop the running session.")
 async def stop_session(ctx: commands.Context):
     session_manager.stop_session(ctx.author.id)
     await ctx.send("Your session has stoped.")
 
 
-@bot.hybrid_command(name="session status", with_app_command=True, description="Checks the status of the session.")
+@bot.hybrid_command(name="status", with_app_command=True, description="Checks the status of the session.")
 async def session_status(ctx: commands.Context):
     status = session_manager.get_container_status(ctx.author.id)
     await ctx.send(f"Your session is {status}!")
@@ -92,7 +92,7 @@ async def session_status(ctx: commands.Context):
 async def exec_bash(ctx: commands.Context, command: str):
     session = session_manager.get_session(ctx.author.id)
     if session is None:
-        await ctx.send("You have no active session. You can start one with `/session start`")
+        await ctx.send("You have no active session. You can start one with `/start`")
         return
 
     stdout, stderr = session.exec_bash(command)
