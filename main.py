@@ -37,7 +37,7 @@ async def monitor_container_status():
                 del status_messages[user_id]
             else:
                 await message.edit(content=f"Your session is {status}...")
-        await asyncio.sleep(5)
+        await asyncio.sleep(5) # 5sec delay -> prevent the CPU from being occupied for no reason all the time
 
 
 # Discord has a limit of 2000 Character, we trim to 1900, because of the Markdown formating characters we add later on.
