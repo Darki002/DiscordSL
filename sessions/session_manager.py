@@ -7,6 +7,8 @@ from sessions.SessionError import MaxSessionsError, UserHasSessionError, Session
 IMAGE="ubuntu:24.04"
 MAX_SESSIONS=5
 
+client= PodmanClient.from_env()
+
 sessions={}
 
 
@@ -18,7 +20,6 @@ def start_session(user_id: str, username: str) -> Session | SessionError:
         return UserHasSessionError()
 
     try:
-        client= PodmanClient.from_env()
         container = client.containers.create(IMAGE, detach=True, name=username)
         container.start()
 
