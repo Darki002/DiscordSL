@@ -40,6 +40,7 @@ async def monitor_container_status():
         await asyncio.sleep(5)
 
 
+# Discord has a limit of 2000 Character, we trim to 1900, because of the Markdown formating characters we add later on.
 def trim_output(text: str, limit: int = 1900) -> str:
     """Trim output to avoid hitting Discord's 2000 character limit."""
     if len(text) > limit:
