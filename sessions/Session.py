@@ -14,7 +14,6 @@ class Session:
         self.on_stop = on_stop
         self.timer = threading.Timer(SHUTDOWN_TIME, self.stop)
 
-
     def stop(self):
         self.timer.cancel()
         self.container.stop()

@@ -29,17 +29,21 @@ def start_session(user_id: str, username: str) -> Session | SessionError:
     except APIError:
         return SessionError()
 
+
 def stop_session(user_id: str):
     get_session(user_id).stop()
 
+
 def get_session(user_id: str) -> Session :
     return sessions.get(user_id)
+
 
 def get_container_status(user_id: str) -> str:
     session = get_session(user_id)
     if session:
         return session.status()
     return "unknown"
+
 
 def _remove_container(user_id: str):
     sessions.pop(user_id)

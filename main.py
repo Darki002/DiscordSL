@@ -47,7 +47,6 @@ def trim_output(text: str, limit: int = 1900) -> str:
     return text
 
 
-
 @bot.event
 async def on_command(ctx):
     logger.info(f"Command used: {ctx.command} by {ctx.author} in {ctx.guild}/{ctx.channel}")
@@ -57,6 +56,7 @@ async def on_command(ctx):
 @bot.hybrid_command(name="ping", with_app_command=True, description="Ping Bot and response with Pong.")
 async def ping(ctx):
     await ctx.send("Pong!")
+
 
 @bot.hybrid_command(name="session start", with_app_command=True, description="Start a session.")
 async def start_session(ctx):
@@ -73,6 +73,7 @@ async def start_session(ctx):
     message = await ctx.send("Your session is starting...")
     status_messages[session.user_id] = (message, session)
 
+
 @bot.hybrid_command(name="session stop", with_app_command=True, description="Stop the running session.")
 async def stop_session(ctx):
     session_manager.stop_session(ctx.author.id)
@@ -83,7 +84,6 @@ async def stop_session(ctx):
 async def session_status(ctx):
     status = session_manager.get_container_status(ctx.author.id)
     await ctx.send(f"Your session is {status}!")
-
 
 
 @bot.hybrid_command(name="exec", with_app_command=True, description="Executes a bash command within your current session.")
