@@ -21,5 +21,26 @@ class Session:
         self.on_stop(self.user_id)
 
     def status(self):
-        self.container.reload()  # Refresh container state
+        self.container.reload()
         return self.container.status
+
+    def exec_bash(self, command: str):
+        exit_code, output = self.container.exec_run(command)
+
+        stdout = b''
+        stderr = b''
+
+        # Handle streamed or tuple output
+        if hasattr(output, '__iter__') and not isinstance(output, tuple):
+            for item in output:
+                if isinstance(item, tuple):
+                    out, err = item
+                    stdout += out
+                    stderr += err
+                else:
+                    stdout += item
+        else:
+            # Tuple (stdout, stderr)
+            stdout, stderr = output if isinstance(output, tuple) else (output, b'')
+
+        return stdout.decode(errors="replace").strip(), stderr.decode(errors="replace").strip()

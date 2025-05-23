@@ -1,5 +1,6 @@
 import os
 import discord
+from discord import app_commands
 from discord.ext import commands
 from dotenv import load_dotenv
 from sessions import session_manager
@@ -72,6 +73,29 @@ async def session_status(ctx):
     status = session_manager.get_container_status(ctx.author.id)
     await ctx.send(f"Your session is {status}!")
 
+
+
+@bot.hybrid_command(name="exec", with_app_command=True, description="Executes a bash command within your current session.")
+@app_commands.describe(command="The bash command you want to run")
+async def exec_bash(ctx: commands.Context, command: str):
+    session = session_manager.get_session(str(ctx.author.id))
+    if session is None:
+        await ctx.send("You have no active session. You can start one with `/session start`")
+        return
+
+    stdout, stderr = session.exec_bash(command)
+
+    response = ""
+    if stdout:
+        response += f"**STDOUT:**\n```bash\n{stdout}\n```"
+    if stderr:
+        response += f"**STDERR:**\n```bash\n{stderr}\n```"
+    if not response:
+        response = "No output was returned."
+
+    await ctx.send(response)
+
+
 # Commands end
 
 @bot.event
@@ -81,4 +105,3 @@ async def on_ready():
     bot.loop.create_task(monitor_container_status())
 
 bot.run(token)
-
