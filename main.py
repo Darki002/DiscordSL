@@ -11,7 +11,7 @@ from sessions.SessionError import MaxSessionsError, UserHasSessionError, Session
 
 load_dotenv()
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname) - %(message)s")
 logger = logging.getLogger("discord_bot")
 
 token = os.getenv("DISCORD_TOKEN")
