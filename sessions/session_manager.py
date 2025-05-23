@@ -1,4 +1,5 @@
 from podman import PodmanClient
+from podman.errors import ImageNotFound, APIError
 
 from sessions.Session import Session
 from sessions.SessionError import MaxSessionsError, UserHasSessionError, SessionError
@@ -16,12 +17,17 @@ def start_session(user_id: str, username: str) -> Session | SessionError:
     if sessions.get(user_id) is not None:
         return UserHasSessionError()
 
-    client= PodmanClient.from_env()
-    container = client.containers.create(IMAGE, detach=True, name=username)
-    container.start()
+    try:
+        client= PodmanClient.from_env()
+        container = client.containers.create(IMAGE, detach=True, name=username)
+        container.start()
 
-    sessions[user_id] = Session(user_id, container, _remove_container)
-    return sessions[user_id]
+        sessions[user_id] = Session(user_id, container, _remove_container)
+        return sessions[user_id]
+    except ImageNotFound:
+        return SessionError()
+    except APIError:
+        return SessionError()
 
 def stop_session(user_id: str):
     get_session(user_id).stop()

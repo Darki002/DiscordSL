@@ -7,7 +7,7 @@ from sessions import session_manager
 import logging
 import asyncio
 
-from sessions.SessionError import MaxSessionsError, UserHasSessionError
+from sessions.SessionError import MaxSessionsError, UserHasSessionError, SessionError
 
 load_dotenv()
 
@@ -67,6 +67,8 @@ async def start_session(ctx):
     if session is UserHasSessionError:
         await ctx.send("You already have a running session!")
         return
+    if session is SessionError:
+        await ctx.send("Whoops! There was an unexpected error, while starting a session!")
 
     message = await ctx.send("Your session is starting...")
     status_messages[session.user_id] = (message, session)
