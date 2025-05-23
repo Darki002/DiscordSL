@@ -1,14 +1,17 @@
+import logging
 import threading
 
 from podman.domain.containers import Container
 from podman.errors import APIError
+
+logger = logging.getLogger("session")
 
 SHUTDOWN_TIME_IN_HOURS=1
 SHUTDOWN_TIME=SHUTDOWN_TIME_IN_HOURS*60*60
 
 
 class Session:
-    def __init__(self, user_id: str, container: Container, on_stop) -> None:
+    def __init__(self, user_id: str | int, container: Container, on_stop) -> None:
         self.user_id: str = user_id
         self.container: Container = container
         self.on_stop = on_stop
@@ -43,5 +46,6 @@ class Session:
                 stdout, stderr = output if isinstance(output, tuple) else (output, b'')
 
             return stdout.decode(errors="replace").strip(), stderr.decode(errors="replace").strip()
-        except APIError:
+        except APIError as e:
+            logger.error(f"Error while executing bash: {e}")
             return "There was an unexpected error, while executing the command!"
