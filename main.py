@@ -111,7 +111,6 @@ async def exec_bash(ctx: commands.Context, command: str):
 
 
 # Commands end
-
 @bot.event
 async def on_ready():
     await bot.tree.sync()
