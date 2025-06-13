@@ -27,7 +27,7 @@ def start_session(user_id: str | int, username: str) -> Session | SessionError:
             IMAGE,
             detach=True,
             tty=True,
-            stdin=True,
+            stdin_open=True,
             name=username
         )
         container.start()
