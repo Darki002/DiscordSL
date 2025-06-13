@@ -38,7 +38,7 @@ def start_session(user_id: str | int, username: str) -> Session | SessionError:
         logger.error(f"Image was not found: {e}")
         return SessionError()
     except APIError as e:
-        logger.error(f"Podman error: {e}")
+        logger.error(f"Podman APIError: {e.response.status_code} – {e.response.text}")
         return SessionError()
 
 

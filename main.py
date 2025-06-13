@@ -8,6 +8,7 @@ import logging
 import asyncio
 
 from sessions.SessionError import MaxSessionsError, UserHasSessionError, SessionError
+from sessions.podman_check import check_podman_socket
 
 load_dotenv()
 
@@ -116,6 +117,11 @@ async def exec_bash(ctx: commands.Context, command: str):
 @bot.event
 async def on_ready():
     await bot.tree.sync()
+
+    if not check_podman_socket():
+        logger.warning("Podman socket check failed. Bot will not function properly.")
+        return
+
     logger.info(f"Bot is online as {bot.user}")
     bot.loop.create_task(monitor_container_status())
 
