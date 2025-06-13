@@ -28,6 +28,10 @@ class Session:
         return self.container.status
 
     def exec_bash(self, command: str) -> tuple[str, str] | str:
+
+        if(isPermissibleCommand(command)):
+            return "You don't have enough privileges to execute this command. Check out https://github.com/Darki002/DiscordSL for more info!"
+
         try:
             exit_code, output = self.container.exec_run(command)
 
@@ -49,3 +53,8 @@ class Session:
         except APIError as e:
             logger.error(f"Error while executing bash: {e}")
             return "There was an unexpected error, while executing the command!"
+
+    def isPermissibleCommand(self, command: str) -> bool:
+        if("sudo" in command):
+            return false
+        return true
