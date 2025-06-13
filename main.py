@@ -15,6 +15,10 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("discord_bot")
 
+uid = os.geteuid()
+gid = os.getegid()
+logger.info(f"Bot running as UID {uid}, GID {gid}")
+
 if not check_podman_socket():
     logger.warning("Podman socket check failed. Bot will not function properly.")
     exit(77)
