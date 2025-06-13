@@ -61,18 +61,20 @@ async def ping(ctx: commands.Context):
 
 @bot.hybrid_command(name="start", with_app_command=True, description="Start a session.")
 async def start_session(ctx: commands.Context):
-    session = session_manager.start_session(ctx.author.id, ctx.author.name)
-    if session is MaxSessionsError:
-        await ctx.send("Max. number of sessions reached, too many users atm. Please try again later.")
+    result = session_manager.start_session(ctx.author.id, ctx.author.name)
+
+    if isinstance(result, MaxSessionsError):
+        await ctx.send("Max. number of sessions reached…")
         return
-    if session is UserHasSessionError:
+    if isinstance(result, UserHasSessionError):
         await ctx.send("You already have a running session!")
         return
-    if session is SessionError:
-        await ctx.send("Whoops! There was an unexpected error, while starting a session!")
+    if isinstance(result, SessionError):
+        await ctx.send("Whoops! Unexpected error while starting a session!")
+        return
 
     message = await ctx.send("Your session is starting...")
-    status_messages[session.user_id] = (message, session)
+    status_messages[result.user_id] = (message, result)
 
 
 @bot.hybrid_command(name="stop", with_app_command=True, description="Stop the running session.")
