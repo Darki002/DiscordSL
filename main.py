@@ -15,6 +15,10 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("discord_bot")
 
+if not check_podman_socket():
+    logger.warning("Podman socket check failed. Bot will not function properly.")
+    exit(77)
+
 token = os.getenv("DISCORD_TOKEN")
 if token is None:
     raise ValueError("DISCORD_TOKEN environment variable not set")
@@ -117,10 +121,6 @@ async def exec_bash(ctx: commands.Context, command: str):
 @bot.event
 async def on_ready():
     await bot.tree.sync()
-
-    if not check_podman_socket():
-        logger.warning("Podman socket check failed. Bot will not function properly.")
-        return
 
     logger.info(f"Bot is online as {bot.user}")
     bot.loop.create_task(monitor_container_status())
