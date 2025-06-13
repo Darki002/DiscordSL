@@ -23,7 +23,13 @@ def start_session(user_id: str | int, username: str) -> Session | SessionError:
 
     try:
         client = PodmanClient.from_env()
-        container = client.containers.create(IMAGE, detach=True, name=username)
+        container = client.containers.create(
+            IMAGE,
+            detach=True,
+            tty=True,
+            stdin=True,
+            name=username
+        )
         container.start()
 
         sessions[user_id] = Session(user_id, container, _remove_container)
