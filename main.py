@@ -1,4 +1,6 @@
 import os
+from inspect import getmembers
+
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -15,9 +17,7 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("discord_bot")
 
-uid = os.geteuid()
-gid = os.getegid()
-logger.info(f"Bot running as UID {uid}, GID {gid}")
+
 
 if not check_podman_socket():
     logger.warning("Podman socket check failed. Bot will not function properly.")
@@ -67,6 +67,14 @@ async def on_command(ctx: commands.Context):
 async def ping(ctx: commands.Context):
     await ctx.send("Pong!")
 
+@bot.hybrid_command(name="help", with_app_command=True, description="List all possible commands.")
+async def help(ctx: commands.Context):
+    help_text = "Command\t\tDescription\n"
+
+    for command in bot.commands:
+        help_text += "\n" + command.name + "\t\t" + command.description
+
+    await ctx.send(help_text)
 
 @bot.hybrid_command(name="start", with_app_command=True, description="Start a session.")
 async def start_session(ctx: commands.Context):
