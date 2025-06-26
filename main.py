@@ -1,4 +1,6 @@
 import os
+from inspect import getmembers
+
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -15,9 +17,7 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("discord_bot")
 
-uid = os.geteuid()
-gid = os.getegid()
-logger.info(f"Bot running as UID {uid}, GID {gid}")
+
 
 if not check_podman_socket():
     logger.warning("Podman socket check failed. Bot will not function properly.")
@@ -51,7 +51,7 @@ async def monitor_container_status():
 
 # Discord has a limit of 2000 Character, we trim to 1900, because of the Markdown formating characters we add later on.
 def trim_output(text: str, limit: int = 1900) -> str:
-    """Trim output to avoid hitting Discord's 2000 character limit."""
+    """Trim output to avoid hitting Discord's 2000-character limit."""
     if len(text) > limit:
         return text[:limit] + "\n... (truncated)"
     return text
@@ -67,6 +67,14 @@ async def on_command(ctx: commands.Context):
 async def ping(ctx: commands.Context):
     await ctx.send("Pong!")
 
+@bot.hybrid_command(name="help", with_app_command=True, description="List all possible commands.")
+async def help(ctx: commands.Context):
+    help_text = "Command\t\tDescription\n"
+
+    for command in bot.commands:
+        help_text += "\n" + command.name + "\t\t" + command.description
+
+    await ctx.send(help_text)
 
 @bot.hybrid_command(name="start", with_app_command=True, description="Start a session.")
 async def start_session(ctx: commands.Context):
@@ -89,7 +97,7 @@ async def start_session(ctx: commands.Context):
 @bot.hybrid_command(name="stop", with_app_command=True, description="Stop the running session.")
 async def stop_session(ctx: commands.Context):
     session_manager.stop_session(ctx.author.id)
-    await ctx.send("Your session has stoped.")
+    await ctx.send("Your session has stopped.")
 
 
 @bot.hybrid_command(name="status", with_app_command=True, description="Checks the status of the session.")
