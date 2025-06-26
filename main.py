@@ -66,15 +66,6 @@ async def on_command(ctx: commands.Context):
 async def ping(ctx: commands.Context):
     await ctx.send("Pong!")
 
-@bot.hybrid_command(name="help", with_app_command=True, description="List all possible commands.")
-async def help(ctx: commands.Context):
-    help_text = "Command\t\tDescription\n"
-
-    for command in bot.commands:
-        help_text += "\n" + command.name + "\t\t" + command.description
-
-    await ctx.send(help_text)
-
 @bot.hybrid_command(name="start", with_app_command=True, description="Start a session.")
 async def start_session(ctx: commands.Context):
     result = session_manager.start_session(ctx.author.id, ctx.author.name)
