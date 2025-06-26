@@ -1,5 +1,6 @@
 import logging
 import threading
+import re
 
 from podman.domain.containers import Container
 from podman.errors import APIError
@@ -33,7 +34,8 @@ class Session:
 
         try:
             exit_code, output = self.container.exec_run(command)
-            return output.decode().strip()
+            clean_output = re.sub(r'[\x00-\x1F\x7F-\x9F]', '', output.decode(errors='ignore')).strip()
+            return clean_output
         except APIError as e:
             logger.error(f"Error while executing bash: {e}")
             return "There was an unexpected error, while executing the command!"

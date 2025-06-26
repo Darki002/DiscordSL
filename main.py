@@ -66,7 +66,7 @@ async def ping(ctx: commands.Context):
     await ctx.send("Pong!")
 
 @bot.hybrid_command(name="help", with_app_command=True, description="List all possible commands.")
-async def help(ctx: commands.Context):
+async def help_command(ctx: commands.Context):
     help_text = "Command\t\tDescription\n"
 
     for command in bot.commands:
@@ -116,7 +116,7 @@ async def exec_bash(ctx: commands.Context, command: str):
 
     if response:
         response_trim = trim_output(response)
-        response += f"**OUTPUT:**\n```bash\n{response_trim}\n```"
+        response = f"**OUTPUT:**\n```bash\n{response_trim}\n```"
     else:
         response = "No output was returned."
 
