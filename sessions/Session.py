@@ -29,32 +29,18 @@ class Session:
 
     def exec_bash(self, command: str) -> tuple[str, str] | str:
 
-        if(isPermissibleCommand(command)):
+        if self.is_permissible_command(command):
             return "You don't have enough privileges to execute this command. Check out https://github.com/Darki002/DiscordSL for more info!"
 
         try:
             exit_code, output = self.container.exec_run(command)
-
-            stdout = b''
-            stderr = b''
-
-            if hasattr(output, '__iter__') and not isinstance(output, tuple):
-                for item in output:
-                    if isinstance(item, tuple):
-                        out, err = item
-                        stdout += out
-                        stderr += err
-                    else:
-                        stdout += item
-            else:
-                stdout, stderr = output if isinstance(output, tuple) else (output, b'')
-
-            return stdout.decode(errors="replace").strip(), stderr.decode(errors="replace").strip()
+            return output.decode().strip()
         except APIError as e:
             logger.error(f"Error while executing bash: {e}")
             return "There was an unexpected error, while executing the command!"
 
-    def isPermissibleCommand(self, command: str) -> bool:
-        if("sudo" in command):
-            return false
-        return true
+    @staticmethod
+    def is_permissible_command(command: str) -> bool:
+        if "sudo" in command:
+            return False
+        return True
