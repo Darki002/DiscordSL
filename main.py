@@ -114,16 +114,12 @@ async def exec_bash(ctx: commands.Context, command: str):
         await ctx.send("You have no active session. You can start one with `/start`")
         return
 
-    stdout, stderr = session.exec_bash(command)
+    response = session.exec_bash(command)
 
-    response = ""
-    if stdout:
-        stdout_trim = trim_output(stdout)
-        response += f"**STDOUT:**\n```bash\n{stdout_trim}\n```"
-    if stderr:
-        stderr_trim = trim_output(stderr)
-        response += f"**STDERR:**\n```bash\n{stderr_trim}\n```"
-    if not response:
+    if response:
+        response_trim = trim_output(response)
+        response += f"**OUTPUT:**\n```bash\n{response_trim}\n```"
+    else:
         response = "No output was returned."
 
     await ctx.send(response)
