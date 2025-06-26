@@ -28,8 +28,7 @@ class Session:
         return self.container.status
 
     def exec_bash(self, command: str) -> str:
-
-        if self.is_permissible_command(command):
+        if not self.is_permissible_command(command):
             return "You don't have enough privileges to execute this command. Check out https://github.com/Darki002/DiscordSL for more info!"
 
         try:
