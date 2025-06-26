@@ -94,8 +94,12 @@ async def start_session(ctx: commands.Context):
 
 @bot.hybrid_command(name="stop", with_app_command=True, description="Stop the running session.")
 async def stop_session(ctx: commands.Context):
-    session_manager.stop_session(ctx.author.id)
-    await ctx.send("Your session has stopped.")
+    try:
+        await ctx.defer()
+        session_manager.stop_session(ctx.author.id)
+        await ctx.send("Your session has stopped.")
+    except discord.errors.NotFound:
+        await ctx.channel.send("Your session has stopped.")
 
 
 @bot.hybrid_command(name="status", with_app_command=True, description="Checks the status of the session.")
