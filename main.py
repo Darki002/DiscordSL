@@ -1,5 +1,4 @@
 import os
-from inspect import getmembers
 
 import discord
 from discord import app_commands
