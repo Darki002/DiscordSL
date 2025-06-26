@@ -6,4 +6,4 @@ podman run -d \
   -e DISCORD_TOKEN="<token>" \
   -e DOCKER_HOST="unix:///var/run/user/1000/podman/podman.sock" \
   -v /var/run/user/1000/podman/podman.sock:/var/run/user/1000/podman/podman.sock:Z \
-  ghcr.io/darki002/discordsl:v1.0-beta.7
+  ghcr.io/darki002/discordsl:v1.0-beta.8
