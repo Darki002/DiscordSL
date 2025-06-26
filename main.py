@@ -17,7 +17,6 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger("discord_bot")
 
 
-
 if not check_podman_socket():
     logger.warning("Podman socket check failed. Bot will not function properly.")
     exit(77)
@@ -29,7 +28,7 @@ if token is None:
 intents = discord.Intents.default()
 intents.message_content = True
 
-bot = commands.Bot(command_prefix="$", intents=intents)
+bot = commands.Bot(command_prefix="$", intents=intents, help_command=None)
 
 status_messages = {}
 
@@ -65,6 +64,15 @@ async def on_command(ctx: commands.Context):
 @bot.hybrid_command(name="ping", with_app_command=True, description="Ping Bot and response with Pong.")
 async def ping(ctx: commands.Context):
     await ctx.send("Pong!")
+
+@bot.hybrid_command(name="help", with_app_command=True, description="List all possible commands.")
+async def help(ctx: commands.Context):
+    help_text = "Command\t\tDescription\n"
+
+    for command in bot.commands:
+        help_text += "\n" + command.name + "\t\t" + command.description
+
+    await ctx.send(help_text)
 
 @bot.hybrid_command(name="start", with_app_command=True, description="Start a session.")
 async def start_session(ctx: commands.Context):
