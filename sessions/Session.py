@@ -33,7 +33,7 @@ class Session:
             return "You don't have enough privileges to execute this command. Check out https://github.com/Darki002/DiscordSL for more info!"
 
         try:
-            exit_code, output = self.container.exec_run(command)
+            exit_code, output = self.container.exec_run(['sh', '-c', command])
             clean_output = re.sub(r'[\x00-\x1F\x7F-\x9F]', '', output.decode(errors='ignore')).strip()
             return clean_output
         except APIError as e:
